@@ -1,69 +1,218 @@
-<!DOCTYPE html>
-<html lang="en">
+
+<!doctype html>
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101827">
-<title>My AI Video Studio</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My AI Video Studio V2</title>
 <style>
-:root{--bg:#0b1220;--panel:#121d30;--line:#26364f;--text:#edf3ff;--muted:#9eacc2;--accent:#7c5cff;--cyan:#29c6d8}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1220,#101a2d);color:var(--text);font:16px/1.5 system-ui,Arial,sans-serif}
-header{padding:26px 18px;text-align:center;background:#101827;border-bottom:1px solid var(--line)}h1{margin:0;font-size:clamp(25px,5vw,38px)}header p{color:var(--muted);margin:8px 0 0}
-main{max-width:900px;margin:22px auto;padding:0 14px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-button,.tab{border:0;border-radius:10px;padding:12px 16px;background:var(--accent);color:white;font-weight:700;cursor:pointer}
-.tab{background:#1b2940;border:1px solid var(--line)}.tab.active{background:var(--accent)}
+:root{--bg:#0b1020;--panel:#151d32;--line:#293653;--txt:#eef3ff;--muted:#aab6d0;--accent:#7c9cff;--green:#55d6a2}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#0b1020,#111a2d);color:var(--txt);font:16px/1.55 system-ui,Arial}
+header{padding:26px 18px;text-align:center;background:#10182a;border-bottom:1px solid var(--line)}
+h1{margin:0;font-size:28px}
+header p{color:var(--muted);margin:6px}
+main{max-width:980px;margin:22px auto;padding:0 14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+button,.tab{background:var(--accent);border:0;border-radius:10px;padding:11px 15px;color:#071126;font-weight:700;cursor:pointer}
+.tab{background:var(--panel);color:var(--txt);border:1px solid var(--line)}
+.tab.active{background:var(--accent);color:#071126}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
-h2{margin:0 0 14px;font-size:21px}label{display:block;color:#cbd7e8;font-weight:650;margin:12px 0 6px}
-input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #344762;background:#0b1424;color:var(--text);font:inherit}
-textarea{min-height:120px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.secondary{background:#26364f}.output{white-space:pre-wrap;min-height:120px;background:#09111e;border:1px dashed #405575;border-radius:10px;padding:14px;color:#e8efff}
-small,.muted{color:var(--muted)}.hidden{display:none}
-@media(max-width:600px){.row{grid-template-columns:1fr}.panel{padding:14px}}
+h2{margin-top:0;font-size:21px}
+label{display:block;color:var(--muted);font-size:14px;margin:12px 0 5px}
+input,select,textarea{width:100%;background:#0c1426;color:var(--txt);border:1px solid var(--line);border-radius:9px;padding:12px;font:inherit}
+textarea{min-height:100px;resize:vertical}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.secondary{background:#263653;color:var(--txt)}
+.output{white-space:pre-wrap;background:#081020;border:1px solid var(--line);border-radius:12px;padding:15px;min-height:120px;margin-top:14px;font-size:14px}
+.note{color:var(--muted);font-size:13px}
+.hidden{display:none}
+.green{color:var(--green)}
 </style>
 </head>
 <body>
-<header><h1>🎬 My AI Video Studio</h1><p>Your personal prompt studio for Chinese Drama and Invest Doc</p></header>
+<header>
+<h1>🎬 My AI Video Studio <span class="green">V2</span></h1>
+<p>Chinese Drama • Invest Doc • Google Flow Ready Prompts</p>
+</header>
 <main>
 <div class="tabs">
-<button class="tab active" data-tab="drama">Chinese Drama</button>
-<button class="tab" data-tab="finance">Invest Doc Finance</button>
-<button class="tab" data-tab="maker">Video Maker</button>
+<button class="tab active" onclick="showTab('drama',this)">Chinese Drama</button>
+<button class="tab" onclick="showTab('finance',this)">Invest Doc Finance</button>
+<button class="tab" onclick="showTab('maker',this)">Video Maker</button>
 </div>
+
 <section id="drama" class="panel">
-<h2>🎭 Chinese Drama Prompt Generator</h2>
-<label>Story / Topic</label><input id="dtopic" placeholder="Example: आईने में दिखती दूसरी लड़की">
-<div class="row"><div><label>Video length</label><select id="dlength"><option>60 seconds</option><option selected>90 seconds</option><option>120 seconds</option></select></div><div><label>Genre</label><select id="dgenre"><option>Mystery suspense</option><option>Horror</option><option>Romance and betrayal</option><option>Emotional drama</option><option>Thriller</option></select></div></div>
-<label>Character details / names</label><input id="dchars" placeholder="Example: Anya Lin and Wang Jun">
-<label>Extra instructions</label><textarea id="dextra" placeholder="Any special plot twist or scene details..."></textarea>
-<div class="actions"><button onclick="makeDrama()">Generate prompts</button><button class="secondary" onclick="copyOutput('dout')">Copy</button></div>
-<div id="dout" class="output">Your scene-by-scene prompt will appear here.</div>
-<small>Default: 10-second scenes, Hindi character dialogue (no narrator), Hindi captions, camera directions, VFX, SFX and editing. Keep character appearance consistent.</small>
+<h2>🎭 Chinese Drama Story Generator</h2>
+<div class="grid">
+<div><label>कहानी का विषय</label><input id="topic" value="होटल का कमरा नंबर 404"></div>
+<div><label>Genre</label>
+<select id="genre">
+<option>Mystery suspense</option>
+<option>Horror mystery</option>
+<option>Emotional drama</option>
+<option>Revenge thriller</option>
+<option>Romance suspense</option>
+</select></div>
+<div><label>कुल अवधि</label>
+<select id="duration">
+<option value="6">60 seconds (6 scenes)</option>
+<option value="9" selected>90 seconds (9 scenes)</option>
+<option value="12">120 seconds (12 scenes)</option>
+</select></div>
+<div><label>मुख्य किरदार</label><input id="chars" value="Anya Lin, Wang Jun"></div>
+</div>
+<div class="actions">
+<button onclick="makeDrama()">पूरी कहानी और सीन बनाओ</button>
+<button class="secondary" onclick="copyOut('dramaOut')">कॉपी करें</button>
+</div>
+<div id="dramaOut" class="output">यहाँ आपकी पूरी कहानी और Google Flow prompts दिखाई देंगे।</div>
+<p class="note">हर सीन ठीक 10 सेकंड का होगा। हर किरदार का चेहरा, कपड़े और पहचान एक जैसी रखें।</p>
 </section>
+
 <section id="finance" class="panel hidden">
-<h2>📈 Invest Doc Finance Prompt Generator</h2>
-<label>Video topic</label><input id="ftopic" placeholder="Example: How the Stock Market Really Works">
-<div class="row"><div><label>Video duration</label><select id="flength"><option>5 minutes</option><option>10 minutes</option><option selected>20 minutes</option></select></div><div><label>Visual style</label><select id="fstyle"><option>Premium Vox-style documentary</option><option>Clean whiteboard animation</option><option>Modern 2D motion graphics</option></select></div></div>
-<label>Mascot / reference character details</label><textarea id="fmascot" placeholder="Describe your exact Invest Doc mascot reference. Do not change face, body, clothes, colors or proportions."></textarea>
-<div class="actions"><button onclick="makeFinance()">Generate prompts</button><button class="secondary" onclick="copyOutput('fout')">Copy</button></div>
-<div id="fout" class="output">Your finance video structure will appear here.</div>
-<small>Visual prompts contain no voice-over or spoken dialogue. Write narration separately and synchronize it with scenes.</small>
+<h2>📈 Invest Doc Finance Generator</h2>
+<div class="grid">
+<div><label>वीडियो का विषय</label><input id="ftopic" value="How the Stock Market Really Works"></div>
+<div><label>वीडियो अवधि</label>
+<select id="fdur">
+<option value="5">5 minutes</option>
+<option value="10">10 minutes</option>
+<option value="20" selected>20 minutes</option>
+</select></div>
+<div><label>Visual style</label>
+<select id="fstyle">
+<option>Premium Vox-style documentary</option>
+<option>Clean whiteboard animation</option>
+<option>2D educational animation</option>
+</select></div>
+<div><label>Mascot continuity note</label><input id="mascot" value="Use the exact same Invest Doc mascot reference image in every scene."></div>
+</div>
+<div class="actions">
+<button onclick="makeFinance()">Finance script package बनाओ</button>
+<button class="secondary" onclick="copyOut('financeOut')">कॉपी करें</button>
+</div>
+<div id="financeOut" class="output">यहाँ आपका finance video structure दिखाई देगा।</div>
+<p class="note">Finance prompts में voice-over नहीं होगा। Narration अलग section में रहेगा।</p>
 </section>
+
 <section id="maker" class="panel hidden">
 <h2>🎥 Video Maker</h2>
-<p class="muted">This starter version prepares prompts and opens Google Flow. It does not render videos itself or connect to a live AI video model.</p>
-<label>Generation type</label><select id="vtype"><option>Text-to-Video</option><option>Image-to-Video</option></select>
-<label>Video prompt</label><textarea id="vprompt" placeholder="Paste your final video prompt here..."></textarea>
-<label>Reference image (optional)</label><input type="file" id="vimage" accept="image/*">
-<img id="preview" class="hidden" alt="Reference preview" style="max-width:100%;max-height:260px;border-radius:12px;margin-top:12px">
-<div class="actions"><button onclick="copyOutput('vprompt')">Copy prompt</button><button onclick="window.open('https://labs.google/fx/tools/flow','_blank')">Open Google Flow ↗</button></div>
+<label>Video prompt</label>
+<textarea id="vp" placeholder="अपना video prompt यहाँ लिखें..."></textarea>
+<label>Reference image (preview only)</label>
+<input type="file" accept="image/*" onchange="preview(this)">
+<img id="preview" style="display:none;max-width:100%;max-height:260px;margin-top:12px;border-radius:10px">
+<div class="actions">
+<button onclick="copyOut('vp')">Prompt कॉपी करें</button>
+<button class="secondary" onclick="window.open('https://labs.google/fx/tools/flow','_blank')">Google Flow खोलें</button>
+</div>
+<p class="note">यह panel prompt और reference image तैयार करने में मदद करता है; यह खुद वीडियो render नहीं करता।</p>
 </section>
-<p class="muted" style="text-align:center;font-size:13px">My AI Video Studio • Version 1 • Free personal starter</p>
+
+<p class="note">महत्वपूर्ण: V2 एक offline prompt-building tool है। यह अपने-आप किसी live AI model से जुड़ा नहीं है। असली AI story generation और video rendering के लिए अलग AI service/API connection चाहिए।</p>
 </main>
+
 <script>
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');['drama','finance','maker'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==b.dataset.tab));}));
-function makeDrama(){let t=document.getElementById('dtopic').value||'[STORY TOPIC]',l=document.getElementById('dlength').value,g=document.getElementById('dgenre').value,c=document.getElementById('dchars').value||'[CHARACTER NAMES]',e=document.getElementById('dextra').value;let n=parseInt(l)/10;let s=`Create a ${l} Chinese drama YouTube Short about: ${t}. Genre: ${g}. Characters: ${c}. Make ${n} scenes, each exactly 10 seconds for Google Flow.\\n\\nGLOBAL CONTINUITY: Keep each character's face, age, hairstyle, clothing, body proportions and identity exactly consistent in every scene.\\nDIALOGUE: Characters visible on screen speak their own natural Hindi dialogue. No narrator and no background voice-over.\\nEDITING: Include cinematic camera movement, Hindi on-screen captions, high-quality but believable VFX, sound effects, background music, transitions, lighting and shot details in every scene. Build suspense and end each scene with a strong visual hook.\\n\\n`;for(let i=1;i<=n;i++)s+=`SCENE ${i} — 10 seconds\\nVisual/action: [Describe one clear cinematic action related to the story.]\\nCamera: [Shot size and movement]\\nCharacter dialogue in Hindi: [Short spoken line by the visible character]\\nHindi caption: [Short readable caption]\\nVFX/SFX/Edit: [Specific effects, sound, transition and timing]\\n\\n`;s+=`Extra direction: ${e||'Use a gripping opening, escalating mystery and a satisfying cliffhanger.'}`;document.getElementById('dout').textContent=s;}
-function makeFinance(){let t=document.getElementById('ftopic').value||'[FINANCE TOPIC]',l=document.getElementById('flength').value,st=document.getElementById('fstyle').value,m=document.getElementById('fmascot').value||'Use the supplied Invest Doc mascot reference image exactly.';document.getElementById('fout').textContent=`Create a ${l} US-focused beginner-friendly finance documentary for Invest Doc. Topic: ${t}. Visual style: ${st}. Audience: US viewers ages 18–45; simple Grade 6–8 English; educational, entertaining and high-retention. Format: 16:9, 1920x1080.\\n\\nCHARACTER LOCK: ${m} Do not alter the mascot's face, body, clothing, colors, outline, proportions or design in any scene.\\nVISUAL PROMPTS ONLY: Do not include voice-over or spoken dialogue in video prompts. Provide narration separately, synchronized to the visuals.\\n\\nBuild a clear scene-by-scene documentary with visual descriptions, B-roll, charts, labels, icons, motion graphics, camera moves, transitions, SFX, BGM and edit directions. Explain concepts with simple visual metaphors and accurate financial examples. Use a strong hook, logical progression, recap and conclusion. Avoid guaranteed investment returns or misleading claims.\\n\\nTOPIC: ${t}\\nDURATION: ${l}`;}
-function copyOutput(id){let el=document.getElementById(id),txt=el.value!==undefined?el.value:el.textContent;navigator.clipboard.writeText(txt).then(()=>alert('Copied!')).catch(()=>alert('Please select and copy the text manually.'));}
-document.getElementById('vimage').addEventListener('change',e=>{let f=e.target.files[0],img=document.getElementById('preview');if(f){img.src=URL.createObjectURL(f);img.classList.remove('hidden')}});
+function showTab(id,btn){
+document.querySelectorAll('main>section').forEach(x=>x.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+btn.classList.add('active');
+}
+function copyOut(id){
+let el=document.getElementById(id);
+let t=el.value!==undefined?el.value:el.innerText;
+navigator.clipboard.writeText(t).then(()=>alert('कॉपी हो गया!')).catch(()=>alert('Text select करके copy करें।'));
+}
+function makeDrama(){
+let topic=document.getElementById('topic').value.trim()||'एक रहस्यमयी घटना';
+let genre=document.getElementById('genre').value;
+let n=+document.getElementById('duration').value;
+let chars=document.getElementById('chars').value.trim()||'Anya Lin, Wang Jun';
+let names=chars.split(',').map(x=>x.trim()).filter(Boolean);
+let a=names[0]||'Anya',b=names[1]||'Wang Jun';
+let beats=[
+['रहस्यमयी शुरुआत',`${a} को ${topic} से जुड़ा एक ऐसा संकेत मिलता है जिसकी कोई सामान्य वजह नहीं दिखती।`,'यह... यहाँ कैसे आया?'],
+['पहला शक',`${a} अपने आसपास के लोगों से सवाल करती है, लेकिन ${b} बात छिपाने की कोशिश करता दिखाई देता है।`,'तुम मुझसे कुछ छिपा रहे हो।'],
+['अजीब सबूत',`${a} को एक पुरानी तस्वीर/रिकॉर्डिंग मिलती है, जिसमें वही घटना पहले भी हुई दिखती है।`,'ये तो कल की तारीख से भी पुराना है!'],
+['खतरा करीब',`अचानक लाइट बंद होती है। अंधेरे में किसी के कदमों की आवाज ${a} के बिल्कुल पीछे आकर रुकती है।`,'कौन है वहाँ?'],
+['चौंकाने वाला खुलासा',`${b} सामने आता है और बताता है कि वह इस रहस्य के बारे में पहले से जानता था।`,'मैं तुम्हें बचाने की कोशिश कर रहा था।'],
+['भरोसा टूटा',`${a} को पता चलता है कि ${b} की बात का एक हिस्सा झूठ था। वह सबूत लेकर वहाँ से निकलती है।`,'अब मैं सच खुद पता लगाऊँगी।'],
+['असली सुराग',`एक छिपे हुए संदेश से ${a} को अगली जगह और एक तय समय का पता चलता है।`,'मुझे वहाँ अकेले जाना होगा।'],
+['आखिरी सामना',`${a} रहस्य के केंद्र तक पहुँचती है। दरवाज़ा खुलते ही सामने ऐसा व्यक्ति आता है जिसकी उम्मीद नहीं थी।`,'तुम?! यह सब तुम्हारी वजह से था?'],
+['क्लिफहैंगर',`वह व्यक्ति एक आखिरी राज खोलता है—${topic} का असली सच अभी बाकी है। कैमरा ${a} के सदमे भरे चेहरे पर रुकता है।`,'नहीं... इसका मतलब असली खेल अब शुरू हुआ है!']
+];
+let out=`CHINESE DRAMA SHORT — ${topic}
+Genre: ${genre}
+Duration: ${n*10} seconds | ${n} scenes | Each scene exactly 10 seconds
+Characters: ${names.join(', ')}
+
+GLOBAL CHARACTER LOCK: Keep each character's face, age, hairstyle, clothing, body proportions and identity exactly consistent in every scene. Use the same reference images throughout. Natural Hindi lip-sync. Only visible characters speak. No narrator or background voice-over.
+STYLE: Cinematic Chinese drama, vertical 9:16, expressive acting, suspenseful lighting, clean Hindi captions, high-quality believable VFX, detailed SFX and transitions.
+
+`;
+for(let i=0;i<n;i++){
+let q=beats[i];
+out+=`SCENE ${i+1} — EXACTLY 10 SECONDS
+Story action: ${q[1]}
+Camera: ${i<3?'Slow push-in, close-ups and controlled handheld movement.':i<6?'Tracking shot, reaction close-ups and a brief whip-pan.':'Dramatic dolly-in, reveal shot and final freeze on the reaction.'}
+Hindi dialogue (spoken by visible character): ${q[2]}
+Hindi on-screen caption: ${q[0]}
+VFX/SFX/Edit: ${i===3?'Lights flicker, sudden blackout, footsteps and a sharp impact hit.':i===8?'Deep bass rise, brief silence, subtle glitch and hard cut to black.':'Use atmospheric room tone, suspense pulse, subtle particles, practical light flicker and a smooth cinematic cut.'} Keep captions short and readable; sync sound to action.
+
+`;
+}
+out+='ENDING: End on a strong unanswered question to lead into the next part.\nSEO TITLE IDEA: '+topic+' | आख़िर कमरे/राज़ के पीछे कौन है?';
+document.getElementById('dramaOut').innerText=out;
+}
+function makeFinance(){
+let t=document.getElementById('ftopic').value.trim()||'How the Stock Market Works';
+let m=+document.getElementById('fdur').value;
+let s=document.getElementById('fstyle').value;
+let mas=document.getElementById('mascot').value;
+let sections=[
+'The big question and a surprising hook',
+'The simple definition',
+'Why this system exists',
+'The main players',
+'How the process works step by step',
+'A relatable real-world example',
+'Common beginner mistakes',
+'Risks and what can go wrong',
+'Key lesson and practical takeaway'
+];
+let out=`INVEST DOC — FINANCE VIDEO PACKAGE
+Topic: ${t}
+Audience: United States, beginner–intermediate, simple Grade 6–8 English
+Duration: ${m} minutes | Format: 16:9, 1920×1080
+Visual style: ${s}
+Character continuity: ${mas}
+
+NARRATION SCRIPT OUTLINE (write spoken narration separately from visual prompts)
+`;
+sections.forEach((x,i)=>out+=`${i+1}. ${x}
+Narration: Explain this section in simple, clear English with a concrete US-focused example. Use a curiosity loop into the next section.
+
+`);
+out+='VISUAL / EDIT PROMPT PLAN (NO voice-over or spoken dialogue inside these prompts)\n';
+sections.forEach((x,i)=>out+=`SECTION ${i+1}: ${x}
+Visual: ${s}; show one clear visual idea using charts, icons, labels, simple diagrams, B-roll or animated objects as appropriate. ${mas}
+Camera/Edit: Smooth push-ins, clean match cuts, purposeful motion graphics, readable labels and restrained transitions.
+SFX: Add subtle whooshes, clicks, chart ticks and low-impact accents only where they support the idea.
+
+`);
+out+='SEO CHECKLIST\nCreate 10 curiosity-driven US-focused titles, 5 thumbnail text options (2–4 words), a strong first-15-second hook, description, relevant tags, keywords and accurate chapter timestamps. Avoid promises of guaranteed returns.';
+document.getElementById('financeOut').innerText=out;
+}
+function preview(inp){
+let f=inp.files&&inp.files[0];
+if(!f)return;
+let img=document.getElementById('preview');
+img.src=URL.createObjectURL(f);
+img.style.display='block';
+}
 </script>
-</body></html>
+</body>
+</html>
